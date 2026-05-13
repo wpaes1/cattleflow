@@ -1,0 +1,23 @@
+//***************************
+/*
+/*   Autor: Wellinton Paes
+/*   12/05/2026 23:13
+/*
+/*   Projeto CattleFlow
+/*
+//***************************
+
+
+1 Instalar Apache
+2 Instalar Mysql
+3 Instalar PHP
+4 Instalar Composer
+5 Instalar laravel
+
+6 Criar projeto Laravel
+$ sudo composer create-project --prefer-dist laravel/laravel cattleflow
+
+7 Vincular conta GiyHub
+user: wpaes1
+token: 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
+pwd: well0204Github
