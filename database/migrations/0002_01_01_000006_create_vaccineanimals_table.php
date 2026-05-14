@@ -14,19 +14,19 @@ return new class extends Migration
         Schema::create('vaccine_animals', function (Blueprint $table) {
             $table->id();
             $table->string('trade_name');
-            $table->string('stock_lot');
-            $table->date('validity');
-            $table->date('purchase_date');
-            $table->string('manufacturer');
-            $table->string('purpose');
-            $table->string('dosage');
-            $table->string('interval_days');
-            $table->string('application_method');
-            $table->string('suplier_name');
-            $table->string('tax_document');
-            $table->string('prescription');
-            $table->string('professional_name');
-            $table->string('professional_number');
+            $table->string('stock_lot')->nullable();
+            $table->date('validity')->nullable();
+            $table->date('purchase_date')->nullable();
+            $table->string('manufacturer')->nullable();
+            $table->string('purpose')->nullable();
+            $table->string('dosage')->nullable();
+            $table->string('interval_days')->nullable();
+            $table->string('application_method')->nullable();
+            $table->string('suplier_name')->nullable();
+            $table->string('tax_document')->nullable();
+            $table->string('prescription')->nullable();
+            $table->string('professional_name')->nullable();
+            $table->string('professional_number')->nullable();
 
         });
     }

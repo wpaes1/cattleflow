@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('farm_name');
             $table->string('registration_number')->unique();
-            $table->string('location');
-            $table->string('city');
-            $table->string('state_registration');
-            $table->string('country');
-            $table->string('owner_name');
-            $table->decimal('total_area', 10, 2);
+            $table->string('location')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state_registration')->nullable();
+            $table->string('country')->nullable();
+            $table->string('owner_name')->nullable();
+            $table->decimal('total_area', 10, 2)->nullable();
 
         });
     }

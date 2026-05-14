@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pickets', function (Blueprint $table) {
+        Schema::create('animal_posts', function (Blueprint $table) {
             $table->id();
-            $table->string('picket_description');
-            $table->foreignId('id_farm')->index();
-            $table->decimal('width', 10, 2)->nullable();
-            $table->decimal('depth', 10, 2)->nullable();
-
+             $table->foreignId('id_animal')->index();
+            $table->string('post_description')->nullable();
+            $table->date('post_date')->nullable();
+            
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pickets');
+        Schema::dropIfExists('animal_posts');
     }
 };
