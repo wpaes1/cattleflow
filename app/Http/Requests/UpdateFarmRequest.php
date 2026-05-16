@@ -28,7 +28,7 @@ class UpdateFarmRequest extends FormRequest
 
         return [
             'farm_name' => 'required|string|max:255',
-            'registration_number' => 'nullable|string|max:255|unique:farms,registration_number,' . $farmId,
+            'registration_number' => 'nullable|string|max:255,registration_number,' . $farmId,
             'owner_name' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',

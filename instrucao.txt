@@ -60,7 +60,7 @@ $ php artisan make:migration NOME-DO-ARQUIVO-opcional
 $ php artisan make:seeder FarmSeeder
 
 9.3 Criar as Models
-$ php artisan make:Models Farm --api
+$ php artisan make:Models Farm -c --api
 
 9.4 Criar as controlers
 $ php artisan make:controllers FarmController -mcr

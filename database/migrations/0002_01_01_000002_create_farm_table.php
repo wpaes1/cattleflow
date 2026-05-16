@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('farms', function (Blueprint $table) {
             $table->id();
             $table->string('farm_name');
-            $table->string('registration_number')->nullable()->unique();
+            $table->string('registration_number')->nullable();
             $table->string('location')->nullable();
             $table->string('city')->nullable();
             $table->string('state_registration')->nullable();

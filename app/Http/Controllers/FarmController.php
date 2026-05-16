@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFarmRequest;
 use App\Http\Requests\UpdateFarmRequest;
 use App\Models\Farm;
+use App\Models\LotAnimals;
+use App\Models\Picket;
 use Illuminate\Http\Request;
 
 class FarmController extends Controller
@@ -28,18 +30,38 @@ class FarmController extends Controller
      */
     public function store(StoreFarmRequest $request)
     {
-        $newFarm = $request->validated();
+        $store = $request->validated();
 
         try {
             $farm = new Farm();  //Farm::create($newFarm);
-            $farm->fill($newFarm);
+            $farm->fill($store);
 
            // dd($farm);
-
             $farm->save();
 
+            //criando um piquete automático para a fazenda
+            $picket = Picket::create([
+                'id_farm' => $farm->id,
+                'picket_description' => 'P-001',
+            ]);
 
-            return Response()->json($farm, 201);
+            //Criando um lote automático para o piquete
+            $lot = LotAnimals::create([
+                'id_picket' => $picket->id,
+                'lot_number' => 1,
+                'lot_description' => 'Lote '. date("d-m-Y"),
+                'entry_date' => date("Y-m-d"),
+            ]);
+
+
+            $response = [
+                'farm' => $farm,
+                'picket' => $picket,
+                'lot' => $lot,
+            ];
+
+
+            return Response()->json($response, 201);
         }
         catch (\Exception $e) {
             return Response()->json(['error' => 'Failed to create farm'], 400);
@@ -56,8 +78,8 @@ class FarmController extends Controller
     {
         try {
 
-            $farm = Farm::findOrFail($id);
-            return Response()->json($farm, 200);
+            $show = Farm::findOrFail($id);
+            return Response()->json($show, 200);
 
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -74,17 +96,17 @@ class FarmController extends Controller
     public function update(UpdateFarmRequest $request, string $id)
     {
 
-         $newFarm = $request->validated();
+         $update = $request->validated();
 
         try {
             $farm = Farm::findOrFail($id);
-            $farm->update($newFarm);
+            $farm->update($update);
 
             return Response()->json($farm, 201);
 
         }
         catch (\Exception $e) {
-            return Response()->json(['error' => 'Failed to create farm'], 400);
+            return Response()->json(['error' => 'Failed to update farm'], 400);
              /*** TRADUÇÃO ****/
         }
 
@@ -95,19 +117,34 @@ class FarmController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
-            $removeFarm = Farm::destroy($id);
-            if(!$removeFarm){
-                //throw new Exception();
-                return Response()->json(['message'=>'Farm not identified for exclusion'], 400);
-            }
 
-                return Response()->json(['message'=>'Farm successfully deleted'], 204);
+
+
+        // 1. Encontrar o registro
+        $data = Farm::find($id);
+
+        // 2. Verificar se existe
+        if (!$data) {
+            return response()->json([
+                'message' => 'Farm not identified for exclusion'
+            ], 400);
+        }
+
+        try {
+             // 3. Deletar o registro
+            Farm::destroy($id);
+
+            // 4. Retornar mensagem de sucesso no JSON
+            return response()->json([
+                'message' => 'Farm successfully deleted'
+            ], 200);
+
         }
         catch (\Exception $e) {
             return Response()->json(['error' => 'Failed to remove farm'], 400);
-             /*** TRADUÇÃO ****/
+             //*** TRADUÇÃO ******
         }
+
 
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreFarmRequest extends FormRequest
+class UpdatePicketRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,14 @@ class StoreFarmRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        /*****VALIDAR INEXISTENTE  */
+
         return [
-            //
-           'farm_name' => 'required|string|max:255',
-            'registration_number' => 'nullable|string|max:255',
-            'owner_name' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state_registration' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'total_area' => 'nullable|numeric',
+            'picket_description' => 'required|string|max:255',
+            'id_farm' => 'required|exists:farms,id',
+            'width' => 'nullable|numeric|min:0',
+            'depth' => 'nullable|numeric|min:0',
         ];
     }
 }

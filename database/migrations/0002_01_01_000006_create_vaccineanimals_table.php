@@ -22,12 +22,12 @@ return new class extends Migration
             $table->string('dosage')->nullable();
             $table->string('interval_days')->nullable();
             $table->string('application_method')->nullable();
-            $table->string('suplier_name')->nullable();
-            $table->string('tax_document')->nullable();
-            $table->string('prescription')->nullable();
+            $table->string('supplier_name')->nullable();
+            $table->string('path_tax_document')->nullable();
+            $table->string('path_prescription')->nullable();
             $table->string('professional_name')->nullable();
-            $table->string('professional_number')->nullable();
-
+            $table->string('professional_register_number')->nullable();
+            $table->string('status', 1)->default('A'); //active, inactive
         });
     }
 

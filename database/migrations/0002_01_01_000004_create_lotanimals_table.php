@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('lot_animals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_picket')->index();
-            $table->string('lot_number');
+            $table->integer('lot_number');
             $table->string('lot_description')->nullable();
             $table->string('origin')->nullable();
-            $table->integer('entry_date');
-            $table->integer('quantity_animals');
+            $table->date('entry_date')->nullable();
+            $table->integer('quantity_animals')->nullable();
             $table->decimal('average_weight', 10, 2)->nullable();
             $table->string('destination')->nullable();
-            $table->integer('exit_date')->nullable();
+            $table->date('exit_date')->nullable();
             $table->string('status')->nullable();
-            
+
         });
     }
 

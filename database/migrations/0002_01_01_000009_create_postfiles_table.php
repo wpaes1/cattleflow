@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
              $table->foreignId('id_post')->index();
             $table->string('path')->nullable();
-            $table->date('type')->nullable();
-            
+            $table->string('type', 1)->nullable();
+
         });
     }
 
