@@ -50,7 +50,7 @@ $ sudo systemctl status httpd //apache
 8 Criando banco de dados
 
 //BANCO DE DADOS laravet_db
- CREATE DATABASE laravet_db COLLATE utf8_unicode_ci;
+    CREATE DATABASE laravet_db COLLATE utf8_unicode_ci;
 
 9 Criando API
 9.1 Realizar  as migrations
@@ -76,10 +76,17 @@ $ php artisan make:resource UserResource //permite altear o json de retorno padr
 
 
 
-Boas práticas de segurança
+Boas práticas de segurança //?q=implementando seguraça api laravel
 3. Boas Práticas de Segurança
 Headers de Segurança: Configure middlewares para adicionar headers como Content-Security-Policy, X-Frame-Options: DENY e Strict-Transport-Security.
 Rate Limiting: Use o limitador de solicitações do Laravel para prevenir ataques de força bruta ou DDoS nas rotas de autenticação.
 Gerenciamento de CORS: Configure o arquivo config/cors.php para permitir apenas origens confiáveis, evitando o uso de * (qualquer origem) em produção.
 Tokens de Curta Duração: Configure expiração curta para tokens de acesso e utilize tokens de atualização (refresh tokens) para renovar sessões, especialmente em fluxos OAuth ou JWT.
 Sanitização de Erros: Em produção, garanta que o arquivo .env tenha APP_DEBUG=false para não expor stack traces ou dados sensíveis do banco de dados em respostas de erro.
+
+
+
+SSH Hospedagem $ cd dados/rsa
+nome d achave: id_rsa
+senha d achave : l:8D2sh[Qe51DM
+Chave: SHA256:NlfvQAZy6Xul9FkVXj8Ev8q7Tk6o3AD+JuM4mHJgb+4

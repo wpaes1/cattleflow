@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_files', function (Blueprint $table) {
+        Schema::create('user_profile_habilitys', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_post')->index();
-            $table->string('path')->nullable();
-            $table->string('type', 1)->nullable();
-
+            $table->foreignId('id_user')->index();
+            $table->string('hability');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_files');
+        Schema::dropIfExists('user_profile_habilitys');
     }
 };

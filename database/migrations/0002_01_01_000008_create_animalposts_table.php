@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('animal_posts', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('id_animal')->index();
+            $table->foreignId('id_animal')->index();
             $table->string('post_description')->nullable();
             $table->date('post_date')->nullable();
-            
+
         });
     }
 

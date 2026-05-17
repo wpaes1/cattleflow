@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('animals', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('id_lot_animal')->index();
+            $table->foreignId('id_lot_animal')->index();
             $table->string('earring_number')->nullable();
             $table->string('sex', 1)->nullable();
             $table->string('age')->nullable();
             $table->decimal('entry_weight', 10, 2)->nullable();
             $table->string('breed')->nullable();
             $table->string('sisbov_mapa_br')->nullable();
-            $table->string('status', 1)->nullable();
+            $table->string('status', 1)->nullable()->default('A');  //comment('A - Ativo, V - Vendido, M - Morto, R - Retirado');
 
         });
     }
