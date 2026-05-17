@@ -92,4 +92,12 @@ class UserController extends Controller
     {
         //
     }
+
+
+
+    public function myprofile(Request $request) {
+        return $request->user();
+    }
+
+
 }

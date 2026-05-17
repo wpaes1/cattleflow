@@ -73,3 +73,13 @@ $ php artisan make:resource FarmCollection //alterar o formato do json com pagin
 9.7 Criar resource Normal (exemplo: USERS para adiconar e remover campos )
 $ php artisan make:resource UserResource //permite altear o json de retorno padrão sem mostrar campos que possam ser restritos.
 
+
+
+
+Boas práticas de segurança
+3. Boas Práticas de Segurança
+Headers de Segurança: Configure middlewares para adicionar headers como Content-Security-Policy, X-Frame-Options: DENY e Strict-Transport-Security.
+Rate Limiting: Use o limitador de solicitações do Laravel para prevenir ataques de força bruta ou DDoS nas rotas de autenticação.
+Gerenciamento de CORS: Configure o arquivo config/cors.php para permitir apenas origens confiáveis, evitando o uso de * (qualquer origem) em produção.
+Tokens de Curta Duração: Configure expiração curta para tokens de acesso e utilize tokens de atualização (refresh tokens) para renovar sessões, especialmente em fluxos OAuth ou JWT.
+Sanitização de Erros: Em produção, garanta que o arquivo .env tenha APP_DEBUG=false para não expor stack traces ou dados sensíveis do banco de dados em respostas de erro.

@@ -15,32 +15,23 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('login', [LoginController::class, 'login']) ;
-
-Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:sanctum'); ;
-
-Route::get('/user', function (Request $request) {
-   return $request->user();
-})->middleware('auth:sanctum');
+Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 
+Route::middleware('throttle:60,1')->group(function () { //Limita o número de requisições para 60 por minuto, para evitar abuso da API
+    Route::apiResource('farms', FarmController::class)->middleware('auth:sanctum');
+    Route::apiResource('pickets', PicketController::class)->middleware('auth:sanctum');
+    Route::apiResource('lotanimals', LotAnimalsController::class)->middleware('auth:sanctum');
+    Route::apiResource('animals', AnimalsController::class)->middleware('auth:sanctum');
+    Route::apiResource('animalposts', AnimalPostsController::class)->middleware('auth:sanctum');
+    Route::apiResource('postfiles', PostFilesController::class)->middleware('auth:sanctum');
+    Route::apiResource('vaccineanimals', VaccineAnimalsController::class)->middleware('auth:sanctum');
+
+    //User
+    //Route::apiResource('users', UserController::class) ;//remover esta rota depois, apenas para teste de autenticação
+    Route::get('usermyprofile', [UserController::class, 'myprofile'])->middleware('auth:sanctum');
+
+    Route::post('user', [UserController::class, 'store']) ;
 
 
-
-Route::apiResource('users', UserController::class) ;
-
-Route::apiResource('farms', FarmController::class) ;
-/*
-Todas as rotas para o recurso "farms" estão definidas usando Route::apiResource, que automaticamente cria as seguintes rotas:
-Route::get('/farms', [FarmController::class, 'index']) ;
-Route::post('/farms', [FarmController::class, 'store']) ;
-Route::get('/farms/{farm}', [FarmController::class, 'show']) ;
-Route::put('/farms/{farm}', [FarmController::class, 'update']) ;
-Route::delete('/farms/{id}', [FarmController::class, 'destroy']) ;
-*/
-
-Route::apiResource('pickets', PicketController::class);
-Route::apiResource('lotanimals', LotAnimalsController::class);
-Route::apiResource('animals', AnimalsController::class);
-Route::apiResource('animalposts', AnimalPostsController::class);
-Route::apiResource('postfiles', PostFilesController::class);
-Route::apiResource('vaccineanimals', VaccineAnimalsController::class);
+});
