@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::post('login', [LoginController::class, 'login']);
+Route::post('login', [LoginController::class, 'login']) ;
 Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 
@@ -29,6 +29,7 @@ Route::middleware('throttle:60,1')->group(function () { //Limita o número de re
     //User
     //Route::apiResource('users', UserController::class) ;//remover esta rota depois, apenas para teste de autenticação
     Route::get('usermyprofile', [UserController::class, 'myprofile'])->middleware('auth:sanctum');
+
     Route::post('user', [UserController::class, 'store']) ;
 
 
