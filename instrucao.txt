@@ -60,19 +60,16 @@ $ php artisan make:migration NOME-DO-ARQUIVO-opcional
 $ php artisan make:seeder FarmSeeder
 
 9.3 Criar as Models
-$ php artisan make:Models Farm -c --api
-
-9.4 Criar as controlers
-$ php artisan make:controllers FarmController -mcr
+$ php artisan make:Models Farm -c --api //cria o model e controlers (-c) com métodos para API
 
 9.5 Criar as requests
-$ php artisan make:request StoreFarmRequest
-$ php artisan make:request UpdateFarmRequest
+$ php artisan make:request StoreFarmRequest //regras de validação para garvar
+$ php artisan make:request UpdateFarmRequest //quando tem regras específicas de validação para atualizar
 
 9.6 Criar Resource Collection (paginação)
-$ php artisan make:resource FarmCollection
-$ php artisan make:resource UserCollection
+$ php artisan make:resource FarmCollection //alterar o formato do json com paginação
+
 
 9.7 Criar resource Normal (exemplo: USERS para adiconar e remover campos )
-$ php artisan make:resource UserResource
+$ php artisan make:resource UserResource //permite altear o json de retorno padrão sem mostrar campos que possam ser restritos.
 

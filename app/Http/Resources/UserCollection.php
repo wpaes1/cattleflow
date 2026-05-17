@@ -15,7 +15,7 @@ class UserCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        $totalRegs = User::count();
+        $totalRegs = User::count('id');
         return [
             'data' => $this->collection,
             'total'=>  $totalRegs,

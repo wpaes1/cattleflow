@@ -16,7 +16,7 @@ class AnimalPostsCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         // return parent::toArray($request);
-        $totalRegs = AnimalPosts::count();
+        $totalRegs = AnimalPosts::count('id');
         return [
             'data' => $this->collection,
             'total'=> $totalRegs,

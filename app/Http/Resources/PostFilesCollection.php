@@ -16,7 +16,7 @@ class PostFilesCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         // return parent::toArray($request);
-        $totalRegs = PostFiles::count();
+        $totalRegs = PostFiles::count('id');
         return [
             'data' => $this->collection,
             'total'=> $totalRegs,

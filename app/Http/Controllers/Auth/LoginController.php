@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -36,5 +38,33 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+
+    public function login (Request $request) {
+        $crendentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required']
+        ]);
+
+        if(Auth::attempt($crendentials)) {
+            //$request->session()->regenerate();
+
+            $token = $request->user()->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                "token_type" => 'Bearer'
+            ]);
+
+
+        } else {
+            return response()->json(['message' => 'Invalid credentials'], 403);
+        }
+    }
+
+    public function logout (Request $request) {
+        $request->user()->deleteToken();
+
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

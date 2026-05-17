@@ -15,7 +15,7 @@ class PicketCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        $totalRegs = Picket::count();
+        $totalRegs = Picket::count('id');
         return [
             'data' => $this->collection,
             'total'=> $totalRegs,
