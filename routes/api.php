@@ -24,7 +24,7 @@ Route::middleware('throttle:60,1')->group(function () { //Limita o número de re
     Route::apiResource('animals', AnimalsController::class)->middleware('auth:sanctum');
     Route::apiResource('animalposts', AnimalPostsController::class)->middleware('auth:sanctum');
     Route::apiResource('postfiles', PostFilesController::class)->middleware('auth:sanctum');
-    Route::apiResource('vaccineanimals', VaccineAnimalsController::class)->middleware('auth:sanctum')->habilitateOnly(['index', 'store', 'show', 'destroy'])    ;
+    Route::apiResource('vaccineanimals', VaccineAnimalsController::class)->middleware('auth:sanctum');
 
     //User
     //Route::apiResource('users', UserController::class) ;//remover esta rota depois, apenas para teste de autenticação
