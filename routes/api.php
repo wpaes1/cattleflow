@@ -10,7 +10,6 @@ use App\Http\Controllers\PostFilesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VaccineAnimalsController;
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
