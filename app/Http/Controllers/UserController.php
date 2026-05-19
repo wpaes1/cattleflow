@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Models\UserProfileHability;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -31,13 +32,21 @@ class UserController extends Controller
         $newUser = $request->validated();
 
         try {
-            $user = new User();  //User::create($newUser);
-            $user->fill($newUser);
-            $user->password = bcrypt($newUser['password']);
+            $newData = User::create([
+                'name' => $newUser['name'],
+                'email' => $newUser['email'],
+                'password' => bcrypt($newUser['password']),
+            ]);
 
-            $user->save();
 
-            return Response()->json($user, 201);
+                //deve seleconar a habilidade do plano atual do usuário para criar o token de acesso
+                $hability = UserProfileHability::create([
+                'id_user' => $newData->id,
+                'hability' => 'free'
+            ]);
+
+
+            return Response()->json(['user' => $newData, 'hability' => $hability], 200);
         }
         catch (\Exception $e) {
             return Response()->json(['error' => 'Failed to create user'], 400);
@@ -73,8 +82,7 @@ class UserController extends Controller
 
         try {
             $user = User::findOrFail($id);
-
-            $user->update($user);
+            $user->update($newUser);
 
             return Response()->json($user, 201);
         }
@@ -92,12 +100,5 @@ class UserController extends Controller
     {
         //
     }
-
-
-
-    public function myprofile(Request $request) {
-        return $request->user();
-    }
-
 
 }

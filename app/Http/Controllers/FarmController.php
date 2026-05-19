@@ -8,21 +8,33 @@ use App\Models\Farm;
 use App\Models\LotAnimals;
 use App\Models\Picket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FarmController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
 
-        $currentPage = $request->query('current_page') ?? 1;
-        $regsPerPage = 3;
-        $skip = ($currentPage -1) * $regsPerPage;
+    try{
+            $currentPage = $request->query('current_page') ?? 1;
+            $regsPerPage = 3;
+            $skip = ($currentPage -1) * $regsPerPage;
 
-        $farms = Farm::skip($skip)->take($regsPerPage)->orderByDesc('id')->get();
-        return Response()->json($farms->toResourceCollection(), 200);
+            $farms = Farm::skip($skip)->take($regsPerPage)->orderByDesc('id')->get();
+            if($farms->isEmpty()) {
+                return Response()->json(['error' => 'Farms not found'], 404);
+            }
+            return Response()->json($farms->toResourceCollection(), 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+
+            return Response()->json(['error' => 'Farm not found'], 404);
+            /*** TRADUÇÃO ****/
+        }
     }
 
     /**
@@ -30,42 +42,54 @@ class FarmController extends Controller
      */
     public function store(StoreFarmRequest $request)
     {
-        $store = $request->validated();
-
-        try {
-            $farm = new Farm();  //Farm::create($newFarm);
-            $farm->fill($store);
-
-           // dd($farm);
-            $farm->save();
-
-            //criando um piquete automático para a fazenda
-            $picket = Picket::create([
-                'id_farm' => $farm->id,
-                'picket_description' => 'P-001',
-            ]);
-
-            //Criando um lote automático para o piquete
-            $lot = LotAnimals::create([
-                'id_picket' => $picket->id,
-                'lot_number' => 1,
-                'lot_description' => 'Lote '. date("d-m-Y"),
-                'entry_date' => date("Y-m-d"),
-            ]);
 
 
-            $response = [
-                'farm' => $farm,
-                'picket' => $picket,
-                'lot' => $lot,
-            ];
+        $userAuthenticable = Auth::user();
+
+       // dd($userAuthenticable->tokenCant('no_farm'));
+
+        if ($userAuthenticable->tokenCant('no_farm')) {
+
+            $store = $request->validated();
+
+            try {
+                $farm = new Farm();  //Farm::create($newFarm);
+                $farm->fill($store);
+
+            // dd($farm);
+                $farm->save();
+
+                //criando um piquete automático para a fazenda
+                $picket = Picket::create([
+                    'id_farm' => $farm->id,
+                    'picket_description' => 'P-001',
+                ]);
+
+                //Criando um lote automático para o piquete
+                $lot = LotAnimals::create([
+                    'id_picket' => $picket->id,
+                    'lot_number' => 1,
+                    'lot_description' => 'Lote '. date("d-m-Y"),
+                    'entry_date' => date("Y-m-d"),
+                ]);
 
 
-            return Response()->json($response, 201);
+                $response = [
+                    'farm' => $farm,
+                    'picket' => $picket,
+                    'lot' => $lot,
+                ];
+
+
+                return Response()->json($response, 201);
+            }
+            catch (\Exception $e) {
+                return Response()->json(['error' => 'Failed to create farm'], 400);
+                /*** TRADUÇÃO ****/
+            }
         }
-        catch (\Exception $e) {
-            return Response()->json(['error' => 'Failed to create farm'], 400);
-             /*** TRADUÇÃO ****/
+        else {
+            return Response()->json(['error' => 'Unauthorized'], 401);
         }
 
 

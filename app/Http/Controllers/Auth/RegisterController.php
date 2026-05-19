@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
+use App\Models\UserActivation;
+use App\Models\UserProfileHability;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -59,12 +61,51 @@ class RegisterController extends Controller
      *
      * @return User
      */
-    protected function create(array $data)
+    public function create(StoreUserRequest  $request) //(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $newUser = $request->validated();
+
+        try {
+            $newData = User::create([
+                'name' => $newUser['name'],
+                'email' => $newUser['email'],
+                'password' => bcrypt($newUser['password']),
+            ]);
+
+
+            //deve seleconar a habilidade do plano atual do usuário para criar o token de acesso
+            $newHability = UserProfileHability::insert([
+                [
+                'id_user' => $newData->id,
+                'hability' => 'free',
+                'created_at' => now(),
+                 'updated_at' => now(),
+                ],
+                [
+                'id_user' => $newData->id,
+                'hability' => 'license_light',
+                'created_at' => now(),
+                 'updated_at' => now(),
+                ]
+            ]);
+
+
+            //Registra a liberaao da conta de pacote
+            UserActivation::create([
+                'id_user' => $newData->id,
+                'verified' => true,
+                'expiration_at' => date('Y-m-d H:i:s', strtotime('+12 month')),
+                'code_number' => rand(100000, 999999),
+            ]);
+
+            $hability = UserProfileHability::select('hability')->whereIdUser($newData->id)->get();
+
+
+            return Response()->json(['user' => $newData, 'hability' => $hability], 200);
+        }
+        catch (\Exception $e) {
+            return Response()->json(['error' => 'Failed to create user'], 400);
+             /*** TRADUÇÃO ****/
+        }
     }
 }
