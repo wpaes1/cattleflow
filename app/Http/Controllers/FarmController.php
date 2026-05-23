@@ -145,7 +145,7 @@ class FarmController extends Controller
 
 
         // 1. Encontrar o registro
-        $data = Farm::find($id);
+        $data = Farm::findOrFail('id', $id);
 
         // 2. Verificar se existe
         if (!$data) {
