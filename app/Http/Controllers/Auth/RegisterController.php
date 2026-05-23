@@ -10,6 +10,10 @@ use App\Models\UserProfileHability;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\welcomeMail;
+use Illuminate\Support\Facades\URL;
+
 class RegisterController extends Controller
 {
     /*
@@ -66,6 +70,17 @@ class RegisterController extends Controller
         $newUser = $request->validated();
 
         try {
+
+            //welcomeMail::envelope(); // Envia o e-mail de boas-vindas com um atraso de 5 segundos
+            /*
+           Mail::raw('Olá, este é um e-mail de texto puro enviado pelo Laravel 13.', function ($message) {
+                $message->to('wconsistemas@gmail.com')
+                        ->subject('Teste de Texto Puro')
+                        ->action('Verificar E-mail', 'TESTE');
+            });
+
+*/
+
             $newData = User::create([
                 'name' => $newUser['name'],
                 'email' => $newUser['email'],
@@ -74,7 +89,7 @@ class RegisterController extends Controller
 
 
             //deve seleconar a habilidade do plano atual do usuário para criar o token de acesso
-            $newHability = UserProfileHability::insert([
+            UserProfileHability::insert([
                 [
                 'id_user' => $newData->id,
                 'hability' => 'free',
@@ -98,13 +113,19 @@ class RegisterController extends Controller
                 'code_number' => rand(100000, 999999),
             ]);
 
-            $hability = UserProfileHability::select('hability')->whereIdUser($newData->id)->get();
+            //hability = UserProfileHability::select('hability')->whereIdUser($newData->id)->get();
 
+            $hability = array([
+                'hability' => 'free',
+            ],
+            [
+                'hability' => 'license_light',
+            ]);
 
             return Response()->json(['user' => $newData, 'hability' => $hability], 200);
         }
         catch (\Exception $e) {
-            return Response()->json(['error' => 'Failed to create user'], 400);
+            return Response()->json(['message' => 'Failed to create user', 'error' => $e->getMessage()], 400);
              /*** TRADUÇÃO ****/
         }
     }
