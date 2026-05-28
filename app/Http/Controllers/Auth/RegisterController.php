@@ -87,6 +87,8 @@ class RegisterController extends Controller
                 'password' => bcrypt($newUser['password']),
             ]);
 
+            $token = $newData->createToken('auth_token')->plainTextToken;
+
 
             //deve seleconar a habilidade do plano atual do usuário para criar o token de acesso
             UserProfileHability::insert([
@@ -122,7 +124,7 @@ class RegisterController extends Controller
                 'hability' => 'license_light',
             ]);
 
-            return Response()->json(['user' => $newData, 'hability' => $hability], 200);
+            return Response()->json(['user' => $newData, 'hability' => $hability,  'access_token' => $token, 'token_type' => 'Bearer'], 200);
         }
         catch (\Exception $e) {
             return Response()->json(['message' => 'Failed to create user', 'error' => $e->getMessage()], 400);

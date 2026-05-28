@@ -20,6 +20,9 @@
 8 Criando banco de dados
 9 Criando API
 
+10 Instalar NODE JS (react)
+11 instalar Typescript
+
 /******************************
 
 
@@ -72,6 +75,23 @@ $ php artisan make:resource FarmCollection //alterar o formato do json com pagin
 
 9.7 Criar resource Normal (exemplo: USERS para adiconar e remover campos )
 $ php artisan make:resource UserResource //permite altear o json de retorno padrão sem mostrar campos que possam ser restritos.
+
+
+10 Instalar node js (react)
+$ sudo dnf install nodejs
+$node -v
+
+11 Instalar Typescript
+$ sudo npm install -g typescript
+$ tsc -v
+
+12 Bibliotécas para react
+$ npm install react-router-dom
+$ npm install axios
+$ npm install -D sass-embedded
+$ npm install axios
+
+
 
 
 
