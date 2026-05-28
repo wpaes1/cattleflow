@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFarmRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Models\UserActivation;
 use App\Models\UserProfileHability;
+use App\Models\Farm;
+use App\Models\LotAnimals;
+use App\Models\Picket;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 
@@ -114,6 +118,32 @@ class RegisterController extends Controller
                 'expiration_at' => date('Y-m-d H:i:s', strtotime('+12 month')),
                 'code_number' => rand(100000, 999999),
             ]);
+
+
+                $farm = new Farm();
+                $farm->fill($request->all());
+                $farm->save();
+
+                // piquete automático para a fazenda
+                $picket = Picket::create([
+                    'id_farm' => $farm->id,
+                    'picket_description' => 'P-001',
+                ]);
+
+                //Criando um lote automático para o piquete
+                $lot = LotAnimals::create([
+                    'id_picket' => $picket->id,
+                    'lot_number' => 1,
+                    'lot_description' => 'Lote '. date("d-m-Y"),
+                    'entry_date' => date("Y-m-d"),
+                ]);
+
+
+
+            //dd($newFarm);
+
+
+
 
             //hability = UserProfileHability::select('hability')->whereIdUser($newData->id)->get();
 

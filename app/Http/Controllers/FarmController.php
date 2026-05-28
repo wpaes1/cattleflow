@@ -46,7 +46,7 @@ class FarmController extends Controller
 
         $userAuthenticable = Auth::user();
 
-       // dd($userAuthenticable->tokenCant('no_farm'));
+        //dd($userAuthenticable);
 
         if ($userAuthenticable->tokenCant('no_farm')) {
 

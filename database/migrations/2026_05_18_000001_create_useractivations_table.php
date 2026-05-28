@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('user_activations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_account')->index();
+            $table->foreignId('id_user')->index();
             $table->integer('code_number');
             $table->boolean('verified')->default(false);
             $table->timestamp('expiration_at')->nullable();
