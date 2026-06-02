@@ -21,14 +21,39 @@ class FarmController extends Controller
 
     try{
             $currentPage = $request->query('current_page') ?? 1;
-            $regsPerPage = 3;
+            $regsPerPage = $request->query('regs_per_page') ?? 3;
             $skip = ($currentPage -1) * $regsPerPage;
 
             $farms = Farm::skip($skip)->take($regsPerPage)->orderByDesc('id')->get();
             if($farms->isEmpty()) {
                 return Response()->json(['error' => 'Farms not found'], 404);
             }
-            return Response()->json($farms->toResourceCollection(), 200);
+
+            foreach ($farms as $farm => $value) {
+                 $progress = 0;
+
+                 //dd("Array:", $value->attributesToArray());
+
+                foreach($value->attributesToArray() as $key => $valueprogress) {
+
+                    if (!is_null($valueprogress)) $progress++;
+
+                    //echo("Key: " . $key . " - Value: " . $value . "\n");
+                }
+
+
+                $farms[$farm]['progress'] = round(($progress / count($value->attributesToArray())) * 100, 2);
+                //echo ($farms[$farm]['progress']);
+            }
+
+
+            $totalRegs = Farm::count('id');
+            return Response()->json([
+                'data' => $farms,
+                'total'=> $totalRegs,
+            ]);
+
+            //return Response()->json($farms->toResourceCollection(), 200);
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
 
@@ -145,7 +170,7 @@ class FarmController extends Controller
 
 
         // 1. Encontrar o registro
-        $data = Farm::findOrFail('id', $id);
+        $data = Farm::whereId($id)->first();
 
         // 2. Verificar se existe
         if (!$data) {

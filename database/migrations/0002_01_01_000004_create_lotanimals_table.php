@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('lot_animals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_picket')->index();
+            //$table->foreignId('id_picket')->index();
+
+
+            $table->foreignId('id_picket')
+                    ->references('id')
+                    ->on('pickets')
+                    ->onDelete('cascade');
+
+
+
             $table->integer('lot_number');
             $table->string('lot_description')->nullable();
             $table->string('origin')->nullable();
@@ -22,7 +31,7 @@ return new class extends Migration
             $table->decimal('average_weight', 10, 2)->nullable();
             $table->string('destination')->nullable();
             $table->date('exit_date')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status', 1)->default('A');  //comment('A - Aberto, T - Transferido, D - Desmembrado, G - Agrupado, F - Fechado');
 
         });
     }

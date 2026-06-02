@@ -17,9 +17,78 @@ class LotAnimalsController extends Controller
         $currentPage = $request->query('current_page') ?? 1;
         $regsPerPage =  $request->query('regs_per_page') ?? 5;
         $skip = ($currentPage -1) * $regsPerPage;
+        $status_desc = '';
 
-        $find = LotAnimals::skip($skip)->take($regsPerPage)->orderByDesc('id')->get();
-        return Response()->json($find->toResourceCollection(), 200);
+        $find = LotAnimals::skip($skip)
+            ->take($regsPerPage)
+            ->join('pickets', 'lot_animals.id_picket', '=', 'pickets.id')
+            ->join('farms', 'pickets.id_farm', '=', 'farms.id')
+            ->select('lot_animals.id', 'lot_animals.id_picket', 'pickets.id_farm', 'pickets.picket_description', 'farms.farm_name',
+                     'lot_animals.lot_number', 'lot_animals.lot_description', 'lot_animals.origin', 'lot_animals.entry_date', 'lot_animals.status')
+            ->orderBy('lot_animals.status')
+            ->orderByDesc('lot_animals.id')
+            ->get();
+
+            foreach ($find as $findKey => $value) {
+                $progress = 0;
+                foreach($value->attributesToArray() as $key => $valueprogress){
+                    if (!is_null($valueprogress)) $progress++;
+
+                    //comment('A - Ativo, T - Transferido, D - Desmenbrado, G - Agrupado', V - Vendido');
+                    //comment('A - Opened, T - Transferred, D - Separated, G - Grouped, V - Sold');
+                    if ($key == 'status') {
+                        switch ($valueprogress) {
+                            case 'A':
+                                $status_desc = 'Opened';
+                                break;
+                            case 'T':
+                                $status_desc = 'Transferred';
+                                break;
+                            case 'D':
+                                $status_desc = 'Separated';
+                                break;
+                            case 'G':
+                               $status_desc = 'Grouped';
+                                break;
+                            case 'V':
+                                $status_desc = 'Sold';
+                                break;
+                        }
+                    }
+                }
+
+
+
+                $find[$findKey]['status_description'] = $status_desc;
+                $find[$findKey]['progress'] = round(($progress / count($value->attributesToArray())) * 100, 2);
+
+                // DATA MEKE UMBRELA PARA PROGRESSO DE PREENCHIMENTO DOS CAMPOS, PARA VER SE O USUÁRIO ESTÁ PREENCHENDO TODOS OS CAMPOS OU APENAS ALGUNS, E ASSIM PODER DAR UM FEEDBACK PARA ELE SE ESTIVER FALTANDO PREENCHER ALGUM CAMPO IMPORTANTE, OU SE ELE ESTIVER PREENCHENDO TUDO CORRETAMENTE.
+$find[$findKey]['about']="Lekiosa ge atunut teizu egafejeb ari nehooke tifibwe kiddo todtu ik giwvaf uvitazi ar ciros ka dalobonu.";
+$find[$findKey]['address']="583 Epuha Pike, Kotduheg, Lebanon - 82744";
+$find[$findKey]['age']=37;
+$find[$findKey]['avatar']=8;
+$find[$findKey]['contact']="(976) 995-1580";
+$find[$findKey]['country']="Croatia";
+$find[$findKey]['date']="05/05/2026";
+$find[$findKey]['email']="upadu@gmail.com";
+$find[$findKey]['fatherName']="Herman Harmon";
+$find[$findKey]['firstName']="Nell";
+$find[$findKey]['fullName']="Nell Goodwin";
+$find[$findKey]['gender']="Female";
+$find[$findKey]['lastName']="Goodwin";
+$find[$findKey]['orderStatus']="Shipped";
+$find[$findKey]['role']="Copywriter";
+$find[$findKey]['visits']=4974;
+            }
+
+
+            $totalRegs = LotAnimals::count('id');
+            return Response()->json([
+                'data' => $find,
+                'total'=> $totalRegs,
+            ]);
+
+        //return Response()->json($find->toResourceCollection(), 200);
     }
 
 

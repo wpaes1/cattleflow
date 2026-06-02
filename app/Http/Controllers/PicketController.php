@@ -18,8 +18,39 @@ class PicketController extends Controller
         $regsPerPage =  $request->query('regs_per_page') ?? 5;
         $skip = ($currentPage -1) * $regsPerPage;
 
-        $find = Picket::skip($skip)->take($regsPerPage)->orderByDesc('id')->get();
-        return Response()->json($find->toResourceCollection(), 200);
+        $find = Picket::skip($skip)
+            ->take($regsPerPage)
+            ->join('farms', 'pickets.id_farm', '=', 'farms.id')
+            ->select('pickets.id', 'pickets.id_farm', 'pickets.picket_description', 'farms.farm_name', 'pickets.width', 'pickets.depth')
+            ->orderByDesc('id_farm', 'id')
+            ->get();
+
+            foreach ($find as $findKey => $value) {
+                 $progress = 0;
+
+                 //dd("Array:", $value->attributesToArray());
+
+                foreach($value->attributesToArray() as $key => $valueprogress) {
+
+                    if (!is_null($valueprogress)) $progress++;
+                    //echo("Key: " . $key . " - Value: " . $value . "\n");
+                }
+                $find[$findKey]['progress'] = round(($progress / count($value->attributesToArray())) * 100, 2);
+                //echo ($farms[$farm]['progress']);
+            }
+
+
+            $totalRegs = Picket::count('id');
+            return Response()->json([
+                'data' => $find,
+                'total'=> $totalRegs,
+            ]);
+
+
+
+
+
+        //return Response()->json($find->toResourceCollection(), 200);
     }
 
 
@@ -52,7 +83,11 @@ class PicketController extends Controller
     {
         try {
 
-            $show = Picket::findOrFail($id);
+            //$show = Picket::findOrFail($id);
+            $show = Picket::join('farms', 'pickets.id_farm', '=', 'farms.id')
+            ->select('pickets.id', 'pickets.id_farm', 'pickets.picket_description', 'farms.farm_name', 'pickets.width', 'pickets.depth')
+            ->where('pickets.id', $id)
+            ->first();
             return Response()->json($show, 200);
 
         }

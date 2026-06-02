@@ -13,8 +13,15 @@ return new class extends Migration
     {
         Schema::create('pickets', function (Blueprint $table) {
             $table->id();
+            //$table->foreignId('id_farm')->index();
+
+            $table->foreignId('id_farm')
+                    ->references('id')
+                    ->on('farms')
+                    ->onDelete('cascade');
+
+
             $table->string('picket_description');
-            $table->foreignId('id_farm')->index();
             $table->decimal('width', 10, 2)->nullable();
             $table->decimal('depth', 10, 2)->nullable();
 

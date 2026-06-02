@@ -18,6 +18,7 @@ class LotAnimalsResource extends JsonResource
         //Aqui você pode personalizar os campos que deseja retornar na resposta JSON
         return [
             'id' => $this->id,
+            'id_picket'=>$this->id_picket,
             'lot_number' => $this->lot_number,
             'lot_description' => $this->lot_description,
             'origin' => $this->origin,

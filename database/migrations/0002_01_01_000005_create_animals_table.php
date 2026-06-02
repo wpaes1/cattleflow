@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('animals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_lot_animal')->index();
+            //$table->foreignId('id_lot_animal')->index();
+
+            $table->foreignId('id_lot_animal')
+                    ->references('id')
+                    ->on('lot_animals')
+                    ->onDelete('cascade');
+
             $table->string('earring_number')->nullable();
             $table->string('sex', 1)->nullable();
             $table->string('age')->nullable();
